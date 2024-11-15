@@ -1,0 +1,83 @@
+﻿@using LicenseeRecords.WebAPI.Models;
+@model IEnumerable<Account>
+@{
+    ViewData["Title"] = "Accounts";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Accounts</h1>
+
+        <a href="@Url.Action("Create", "Account")" class="govuk-button" data-module="govuk-button">
+            Create New Account
+        </a>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Account Name</th>
+                    <th scope="col" class="govuk-table__header">Account Status</th>
+                    <th scope="col" class="govuk-table__header">Licensed Products</th>
+                    <th scope="col" class="govuk-table__header">License Details</th>
+                    <th scope="col" class="govuk-table__header">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var account in Model)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@account.AccountName</td>
+                        <td class="govuk-table__cell">
+                            <strong class="@(account.AccountStatus == "Active" ? "govuk-tag--green" : "govuk-tag--grey")">
+                                @account.AccountStatus
+                            </strong>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @foreach (var license in account.ProductLicence.Where(l => l.LicenceStatus == "Active"))
+                            {
+                                <strong class="govuk-tag govuk-tag--@(license.LicenceStatus == "Active" ? "blue" : "grey") govuk-!-margin-right-1">
+                                    @license.Product.ProductName
+                                </strong>
+                            }
+                        </td>
+                        <td class="govuk-table__cell">
+                            <details class="govuk-details" data-module="govuk-details">
+                                <summary class="govuk-details__summary">
+                                    <span class="govuk-details__summary-text">View License Details</span>
+                                </summary>
+                                <div class="govuk-details__text">
+                                    @foreach (var license in account.ProductLicence)
+                                    {
+                                        <div class="govuk-!-margin-bottom-2">
+                                            <p class="govuk-body govuk-!-margin-bottom-1">
+                                                <strong>@license.Product.ProductName</strong>
+                                                <span class="@(license.LicenceStatus == "Active" ? "govuk-tag--green" : "govuk-tag--grey") govuk-!-margin-left-1">
+                                                    @license.LicenceStatus
+                                                </span>
+                                            </p>
+                                            <p class="govuk-body-s govuk-!-margin-bottom-1">
+                                                From: @license.LicenceFromDate.ToString("d MMM yyyy")
+                                            </p>
+                                            @if (license.LicenceToDate.HasValue)
+                                            {
+                                                <p class="govuk-body-s">
+                                                    To: @license.LicenceToDate.Value.ToString("d MMM yyyy")
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </details>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <a href="@Url.Action("Edit", "Account", new { id = account.AccountId })"
+                               class="govuk-link govuk-link--no-visited-state">Edit</a>
+                            <a href="@Url.Action("Delete", "Account", new { id = account.AccountId })"
+                               class="govuk-link govuk-link--no-visited-state govuk-!-margin-left-2">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

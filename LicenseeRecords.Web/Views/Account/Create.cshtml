@@ -1,0 +1,64 @@
+﻿@using LicenseeRecords.WebAPI.Models;
+@using LicenseeRecords.WebAPI.Services
+@inject ProductService ProductService
+@model Account
+
+@{
+    ViewData["Title"] = "Create Account";
+    var allProducts = ProductService.GetProducts();
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Create Account</h1>
+
+        <form asp-action="Create" method="post">
+            <div class="govuk-form-group">
+                <label asp-for="AccountName" class="govuk-label">Account Name</label>
+                <span asp-validation-for="AccountName" class="govuk-error-message"></span>
+                <input asp-for="AccountName" class="govuk-input" />
+            </div>
+
+            <div class="govuk-form-group">
+                <label asp-for="AccountStatus" class="govuk-label">Status</label>
+                <span asp-validation-for="AccountStatus" class="govuk-error-message"></span>
+                <select asp-for="AccountStatus" class="govuk-select">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend">
+                        Licensed Products
+                    </legend>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        @foreach (var product in allProducts)
+                        {
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input"
+                                       type="checkbox"
+                                       name="SelectedProducts"
+                                       value="@product.ProductId"
+                                       id="product-@product.ProductId" />
+                                <label class="govuk-label govuk-checkboxes__label"
+                                       for="product-@product.ProductId">
+                                    @product.ProductName
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+            </div>
+
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Create Account
+            </button>
+
+            <a href="@Url.Action("Index", "Home")" class="govuk-button govuk-button--secondary">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>

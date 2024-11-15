@@ -1,0 +1,95 @@
+﻿@using LicenseeRecords.WebAPI.Models
+@using LicenseeRecords.WebAPI.Services
+@inject ProductService ProductService
+@model Account
+
+@{
+    ViewData["Title"] = "Edit Account";
+    var allProducts = ProductService.GetProducts();
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Edit Account</h1>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="AccountId" />
+
+            <div class="govuk-form-group">
+                <label asp-for="AccountName" class="govuk-label">Account Name</label>
+                <span asp-validation-for="AccountName" class="govuk-error-message"></span>
+                <input asp-for="AccountName" class="govuk-input" />
+            </div>
+
+            <div class="govuk-form-group">
+                <label asp-for="AccountStatus" class="govuk-label">Account Status</label>
+                <span asp-validation-for="AccountStatus" class="govuk-error-message"></span>
+                <select asp-for="AccountStatus" class="govuk-select">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend">
+                        Licensed Products
+                    </legend>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        @foreach (var product in allProducts)
+                        {
+                            var isActiveLicense = Model.ProductLicence?.Any(pl => pl.Product.ProductId == product.ProductId && pl.LicenceStatus == "Active") ?? false;
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input"
+                                       type="checkbox"
+                                       name="SelectedProducts"
+                                       value="@product.ProductId"
+                                       id="product-@product.ProductId"
+                                @(isActiveLicense ? "checked" : "") />
+                                <label class="govuk-label govuk-checkboxes__label" for="product-@product.ProductId">
+                                    @product.ProductName
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+            </div>
+
+            @if (Model.ProductLicence?.Any() == true)
+            {
+                <div class="govuk-form-group">
+                    <h2 class="govuk-heading-m">Current Licenses</h2>
+                    <dl class="govuk-summary-list">
+                        @foreach (var license in Model.ProductLicence)
+                        {
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">@license.Product.ProductName</dt>
+                                <dd class="govuk-summary-list__value">
+                                    <p class="govuk-body-s">
+                                        Status:
+                                        <strong class="@(license.LicenceStatus == "Active" ? "govuk-tag--green" : "govuk-tag--grey")">
+                                            @license.LicenceStatus
+                                        </strong>
+                                    </p>
+                                    <p class="govuk-body-s">From: @license.LicenceFromDate.ToString("d MMM yyyy")</p>
+                                    @if (license.LicenceToDate.HasValue)
+                                    {
+                                        <p class="govuk-body-s">To: @license.LicenceToDate.Value.ToString("d MMM yyyy")</p>
+                                    }
+                                </dd>
+                            </div>
+                        }
+                    </dl>
+                </div>
+            }
+
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Save Changes
+            </button>
+
+            <a href="@Url.Action("Index", "Home")" class="govuk-button govuk-button--secondary">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>

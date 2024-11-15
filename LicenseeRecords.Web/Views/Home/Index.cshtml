@@ -1,0 +1,53 @@
+﻿@using LicenseeRecords.WebAPI.Services
+@using LicenseeRecords.WebAPI.Models
+@inject AccountService AccountService
+@inject ProductService ProductService
+
+@{
+    ViewData["Title"] = "Home Page";
+    var accounts = AccountService.GetAccounts();
+    var products = ProductService.GetProducts();
+}
+
+<div class="govuk-grid-row">
+
+    @* <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl">Default page template</h1>
+        <p class="govuk-body">This is a paragraph inside a two-thirds wide column</p>
+              
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+
+        <h2 class="govuk-heading-m">One-third column</h2>
+        <p class="govuk-body">This is a paragraph inside a one-third wide column</p>
+
+    </div> *@
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Licensee Records Management</h1>
+
+        <div class="govuk-tabs" data-module="govuk-tabs">
+            <h2 class="govuk-tabs__title">Contents</h2>
+
+            <ul class="govuk-tabs__list">
+                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+                    <a class="govuk-tabs__tab" href="#accounts">Accounts</a>
+                </li>
+                <li class="govuk-tabs__list-item">
+                    <a class="govuk-tabs__tab" href="#products">Products</a>
+                </li>
+            </ul>
+
+            <div class="govuk-tabs__panel" id="accounts">
+                @await Html.PartialAsync("~/Views/Account/Index.cshtml", accounts)
+            </div>
+
+            <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="products">
+                @await Html.PartialAsync("~/Views/Product/Index.cshtml", products)
+            </div>
+
+        </div>
+    </div>
+
+</div>

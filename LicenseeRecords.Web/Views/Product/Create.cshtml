@@ -1,0 +1,28 @@
+﻿@using LicenseeRecords.WebAPI.Models;
+@model Product
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Create Product</h1>
+
+        <form asp-action="Create" method="post">
+            <div class="govuk-form-group">
+                <label asp-for="ProductName" class="govuk-label">Product Name</label>
+                <span asp-validation-for="ProductName" class="govuk-error-message"></span>
+                <input asp-for="ProductName" class="govuk-input" />
+            </div>
+
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Create Product
+            </button>
+
+            <a href="@Url.Action("Index", "Home")" class="govuk-button govuk-button--secondary">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
