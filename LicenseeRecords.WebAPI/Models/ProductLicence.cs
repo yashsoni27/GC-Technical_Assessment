@@ -1,6 +1,4 @@
-﻿using static LicenseeRecords.WebAPI.Models.ProductLicence;
-
-namespace LicenseeRecords.WebAPI.Models
+﻿namespace LicenseeRecords.WebAPI.Models
 {
     public class ProductLicence
     {

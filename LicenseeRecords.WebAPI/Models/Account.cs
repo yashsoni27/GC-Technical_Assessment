@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static LicenseeRecords.WebAPI.Models.ProductLicence;
 
 namespace LicenseeRecords.WebAPI.Models
 {
